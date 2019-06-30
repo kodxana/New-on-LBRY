@@ -33,7 +33,7 @@ import java.net.URLConnection;
  * @author kodxana
  */
 public class NewOnTheLBRY {
-
+//initializing all my variables
     /**
      *
      */
@@ -229,11 +229,14 @@ public class NewOnTheLBRY {
      * @throws AWTException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException, AWTException {
+        //creating a robot to be able to call delays to the system, which I will need to refresh after a certain amount of time
          Robot robot=new Robot();
         while(true){
+            //creating images folder
             File createLocation=new File(System.getProperty("user.dir")+"\\src\\Images\\");
             createLocation.mkdirs();
             for(int x=0;x<=9;x++){
+                //deleting all saved images to the images folder
                File imageFile=new File(System.getProperty("user.dir")+"\\src\\Images\\"+counter+".jpg");
                imageFile.delete();
             }
@@ -242,6 +245,7 @@ public class NewOnTheLBRY {
             System.out.println(System.getProperty("user.home"));
             System.out.println(System.getProperty("user.name"));
             System.out.println(System.getProperty("java.library.path"));
+//setting all variables to their initial value, so that the program can refresh
 frame.setVisible(false); 
 URLs=null;
 app = null;
@@ -281,7 +285,9 @@ URLLink=null;
 border=null;
 gridbag = null;
 c = null;
+            //creating a new instance of the NewOnTheLBRY app, so that the program starts over
        app=new NewOnTheLBRY();
+            //delaying the system for around 200 seconds
        robot.delay(50000);
        robot.delay(50000);
        robot.delay(50000);
@@ -296,6 +302,7 @@ c = null;
      * @throws IOException
      */
     public NewOnTheLBRY() throws FileNotFoundException, IOException{
+        //initializing all the required variables for a fresh program start, or a restart
    gridbag = new GridBagLayout();
    c = new GridBagConstraints();
        JbtLink1=new LinkListener1();
@@ -328,6 +335,7 @@ c = null;
    URL=new JLabel[10];
    URLLink=new JButton[10];
    for(int i=0;i<10;i++){
+       //creating the labels and buttons for each of the 10 channels
    Name[i]=new JLabel("Name:");
    Desc[i]=new JLabel("Description:");
    Created[i]=new JLabel("Created at:");
@@ -338,6 +346,7 @@ c = null;
     experimentTopLayout = new GridLayout(0,1);
     experimentSecondLayout = new GridLayout(0,2);
     experimentSecondLayout2 = new GridLayout(0,4);
+        //setting the jframe settings
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize((int)(screenSize.width*.85), (int)(screenSize.height*.85));
     frame.setLocationRelativeTo(null);
@@ -349,6 +358,7 @@ myThirdPanel=new JPanel[10];
 myTopPanel.setLayout(experimentTopLayout);
 frame.setLayout(experimentTopLayout);
 for(int x=0;x<=9;x++){
+    //initializing each of the jpanels for each channel and setting their layouts
 mySecondPanel[x]=new JPanel();
 myThirdPanel[x]=new JPanel();  
 mySecondPanel[x].setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -357,7 +367,7 @@ myThirdPanel[x].setLayout(gridbag);
 
 }
 
-
+//url that I will get my info for the 10 newest channels from
     URL url = new URL("https://dev.chainquery.lbry.com/api/sql?query=SELECT%20name,%20description,%20thumbnail_url,%20modified_at%20FROM%20chainquery.claim%20WHERE%20claim_type%20=%202%20AND%20bid_state%20=%20%22Controlling%22%20ORDER%20BY%20modified_at%20DESC%20LIMIT%2010");
 
 
@@ -368,7 +378,12 @@ myThirdPanel[x].setLayout(gridbag);
            String line = null;
            counter=0;
            while ((line = br.readLine()) != null) {
+               //i read in the data from the url as strings
                line=line.trim();
+               //if the string starts with any of the values below, like desc, modi, name. I grab the variable for that channel and set it the the right place
+               //if the string starts with thumbnail, then I set the thumbnail url by saving it to the right file, and turning it into a thumbnailicon. If there 
+               //isnt a thumnail url, I set it to the default thumbnail
+               //since thumbnail is the last variable for each channel, I increase the counter by 1 when thumbnail is found in the string
                if(line.startsWith("\"desc")){
                    ChannelDescription[counter]=new JLabel(line.substring(16,line.length()-2));
                    myDescription[counter]=new JTextArea(ChannelDescription[counter].getText());
@@ -397,23 +412,26 @@ System.out.println(saveDir);
 System.out.println(line.substring(18,line.length()-1));
 System.out.println(counter);
 try {
+    //method to save the url to a file
     downloadFile(fileURL, saveDir);
 } catch (IOException ex) {
 }
-
+//creating a thumbnailicon from the file of the image
 ThumbnailIcon icon=new ThumbnailIcon(System.getProperty("user.dir")+"\\src\\Images\\"+counter+".jpg");
 icon.setImage(new ImageIcon(System.getProperty("user.dir")+"\\src\\Images\\"+counter+".jpg").getImage());
 ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
                    }
                    else{
-
+                       //if their isnt a url, this is the default url, for the default image
                        String fileURL ="https://i.imgur.com/ppmD1Q7.png";
                        String saveDir = System.getProperty("user.dir")+"\\src\\Images\\"+counter+".jpg";
 
                        try {
+                            //method to save the url to a file
                            downloadFile(fileURL, saveDir);
                        } catch (IOException ex) {
-                       }        
+                       }   
+                       //creating a thumbnailicon from the file of the image
                        ThumbnailIcon icon=new ThumbnailIcon(System.getProperty("user.dir")+"\\src\\Images\\"+counter+".jpg");
                        ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
 
@@ -433,6 +451,7 @@ ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
                }
 
            }      for(int r=0;r<=9;r++){
+               //setting the layout variables for each component and adding them to the mythirdpanel that they belong to
                c.fill = GridBagConstraints.BOTH;
                c.weightx = 1.0;
                c.gridwidth = 1;
@@ -462,6 +481,7 @@ ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
                myThirdPanel[r].setBackground(Color.white);
                
            }      for(int a=0;a<=9;a++){
+               //setting the layout variables for the thumbnails and mythirdpanel and setting them into mysecondpanel
                c.gridwidth = 1;
                c.fill = GridBagConstraints.BOTH;
                c.weightx = 0;
@@ -490,9 +510,10 @@ ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
 
            }     for(int b=0;b<=9;b++){
 
-               
+               //adding each mysecondpanel into the jframe
                frame.add(mySecondPanel[b]);
            }
+           //adding actionlisteners for each of the buttons so that those listeners will be called when the buttons are pressed
            URLLink[1].addActionListener(JbtLink1);
            URLLink[2].addActionListener(JbtLink2);
            URLLink[3].addActionListener(JbtLink3);
@@ -503,6 +524,7 @@ ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
            URLLink[8].addActionListener(JbtLink8);
            URLLink[9].addActionListener(JbtLink9);
            URLLink[0].addActionListener(JbtLink0);
+           //making the jframe visible
            frame.setVisible(true);  
        }
            
@@ -514,6 +536,7 @@ ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
      * @param saveDir
      * @throws IOException
      */
+    //method for downloading a file from a url into a specific directory
     public static void downloadFile(String fileURL, String saveDir)
             throws IOException {
         URL url = new URL(fileURL);
@@ -558,6 +581,9 @@ ChannelPics[counter] = new JLabel(icon, JLabel.CENTER);
     /**
      *
      */
+    
+    //All classes below find the url that needs to be opened for the each button, then attemps to open that url
+    
     public class LinkListener1  implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e){
